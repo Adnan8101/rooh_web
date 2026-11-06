@@ -1,7 +1,7 @@
 import { db } from '../lib/db'
 
 // Website tiers, highest first. Must match TIERS in bot/src/index.ts.
-export const TIERS = ['Owner', 'Imposter', 'Malkin', 'Co Owner', 'Developer', 'Manager', 'Head Mod', 'Staff Team'] as const
+export const TIERS = ['Owner', 'Imposter', 'Malkin', 'Developer', 'Co Owner', 'Manager', 'Head Mod', 'Staff Team'] as const
 export type Tier = (typeof TIERS)[number]
 
 export type Member = {
