@@ -4,6 +4,25 @@ import { db } from '../lib/db'
 export const TIERS = ['Owner', 'Imposter', 'Malkin', 'Developer', 'Co Owner', 'Manager', 'Head Mod', 'Staff Team'] as const
 export type Tier = (typeof TIERS)[number]
 
+const ALIASES: Record<string, Tier> = {
+  dev: 'Developer',
+  developer: 'Developer',
+  devs: 'Developer',
+  maalkin: 'Malkin',
+  coowner: 'Co Owner',
+  headmod: 'Head Mod',
+  mod: 'Head Mod',
+  staff: 'Staff Team',
+  staffteam: 'Staff Team',
+}
+
+const key = (s: string) => s.toLowerCase().replace(/[^a-z]/g, '')
+const resolveTier = (s?: string | null): Tier | undefined => {
+  if (!s) return undefined
+  const k = key(s)
+  return TIERS.find((t) => key(t) === k) ?? ALIASES[k]
+}
+
 export type Member = {
   id: string
   name: string
@@ -34,17 +53,20 @@ export async function getTeam(): Promise<Member[]> {
       .collection<any>('users')
       .find(
         { bot: { $ne: true } },
-        { projection: { username: 1, globalName: 1, displayName: 1, avatar: 1, banner: 1, manualTier: 1, roles: 1, joinedAt: 1 } },
+        { projection: { username: 1, globalName: 1, displayName: 1, avatar: 1, banner: 1, manualTier: 1, teamRole: 1, roles: 1, joinedAt: 1 } },
       )
       .toArray(),
     d.collection<any>('roles').find({}, { projection: { tier: 1 } }).toArray(),
   ])
-  const roleTier = new Map<string, string>(links.map((r) => [r._id, r.tier]))
+  const roleTier = new Map<string, string>(links.map((r) => [String(r._id), r.tier]))
 
   return docs
     .flatMap((u) => {
-      const ranks = [u.manualTier, ...(u.roles ?? []).map((r: { id: string }) => roleTier.get(r.id))]
-        .map((t) => TIERS.indexOf(t))
+      const ranks = [u.manualTier, u.teamRole, ...(u.roles ?? []).map((r: { id: string }) => roleTier.get(r.id))]
+        .map((t) => {
+          const resolved = resolveTier(t)
+          return resolved ? TIERS.indexOf(resolved) : -1
+        })
         .filter((i) => i >= 0)
       if (!ranks.length || !u.username) return []
       const rank = Math.min(...ranks)
