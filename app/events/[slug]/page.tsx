@@ -90,7 +90,7 @@ export default async function EventPage({ params }: Props) {
               <ul className="grid gap-3 sm:grid-cols-3 sm:gap-4">
                 {e.prizes.map((p) => (
                   <li key={p.label} className="card reveal-scale flex items-center gap-5 p-5 sm:block sm:p-8">
-                    <span className="display block w-24 shrink-0 text-5xl sm:w-auto sm:text-7xl">{p.value}</span>
+                    <span className="display block min-w-[5.5rem] shrink-0 text-[2.75rem] sm:min-w-0 sm:text-7xl">{p.value}</span>
                     <span className="min-w-0">
                       <span className="block font-medium sm:mt-8 sm:text-lg">{p.label}</span>
                       <span className="text-sm text-haze sm:text-base">{p.note}</span>
