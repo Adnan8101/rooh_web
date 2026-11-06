@@ -13,7 +13,7 @@ const since = new Intl.DateTimeFormat('en-GB', { month: 'short', year: 'numeric'
 /*
  * Hierarchy: the higher the tier, the more room each person gets.
  *   Owner                        -> spotlight: full-bleed banner, huge name
- *   Imposter, Malkin, Developer  -> feature cards, 3 across (Developer gets its own badge & glow)
+ *   Imposter, Developer, Malkin  -> feature cards, 3 across (Developer gets its own badge & glow)
  *   Co Owner, Manager            -> profile cards, 4 across
  *   Head Mod, Staff Team         -> compact rows, many across
  */
@@ -22,8 +22,8 @@ type Size = 'xl' | 'lg' | 'md' | 'sm'
 const SIZE_BY_TIER: Record<Tier, Size> = {
   Owner: 'xl',
   Imposter: 'lg',
-  Malkin: 'lg',
   Developer: 'lg',
+  Malkin: 'lg',
   'Co Owner': 'md',
   Manager: 'md',
   'Head Mod': 'sm',
