@@ -10,7 +10,7 @@ export const metadata = {
 export const revalidate = 600
 
 const steps = [
-  { title: 'Join the server', text: 'Tap the button below and accept the invite to the ROOH Discord.' },
+  { title: 'Join the server', text: 'Tap “Join the ROOH Discord” and accept the invite.' },
   { title: 'Find the ticket channel', text: 'Look for the ticket channel near the top of the channel list.' },
   { title: 'Create a ticket', text: 'Press the button there. A private channel opens that only you and the team can see.' },
   { title: 'Tell us what you need', text: 'Explain it in a message. A team member will reply right there.' },
