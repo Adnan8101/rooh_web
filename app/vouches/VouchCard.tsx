@@ -7,7 +7,7 @@ export const day = { format: (d: Date) => fmt.format(d).replace(/\bSept\b/, 'Sep
 /** One vouch, as it was posted: who said it, what they got, who they got it from. */
 export default function VouchCard({ v, people, className = '' }: { v: Vouch; people: Map<string, Person>; className?: string }) {
   return (
-    <a href={v.url} target="_blank" rel="noreferrer" className={`card group block p-6 ${className}`}>
+    <a href={v.url} target="_blank" rel="noreferrer" className={`card group block p-5 sm:p-6 ${className}`}>
       <div className="flex items-center gap-3">
         <Avatar p={v.author} className="size-10" />
         <div className="min-w-0 flex-1">
@@ -21,7 +21,7 @@ export default function VouchCard({ v, people, className = '' }: { v: Vouch; peo
         </svg>
       </div>
 
-      <p className="mt-5 text-2xl font-semibold tracking-tight [overflow-wrap:anywhere]">
+      <p className="mt-4 text-xl font-semibold tracking-tight [overflow-wrap:anywhere] sm:mt-5 sm:text-2xl">
         {v.item ? (
           <>
             <span className="text-haze">Got </span>
@@ -34,7 +34,7 @@ export default function VouchCard({ v, people, className = '' }: { v: Vouch; peo
       {v.note && <p className="mt-1 text-haze">{v.note}</p>}
 
       {v.to.length > 0 && (
-        <div className="mt-5 flex flex-wrap items-center gap-2 text-sm text-haze">
+        <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-haze sm:mt-5">
           from
           {v.to.map((id) => {
             const p = people.get(id)

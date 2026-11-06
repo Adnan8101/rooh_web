@@ -21,9 +21,9 @@ type Size = (typeof SIZE)[number]
 
 const GRID: Record<Size, string> = {
   xl: 'grid gap-4 lg:grid-cols-2 [&>:only-child]:lg:col-span-2',
-  lg: 'grid gap-4 sm:grid-cols-2 lg:grid-cols-3',
-  md: 'grid gap-4 sm:grid-cols-2 lg:grid-cols-4',
-  sm: 'grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+  lg: 'grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-3',
+  md: 'grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-4',
+  sm: 'grid gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4',
 }
 
 function Banner({ m, className = '' }: { m: Member; className?: string }) {
@@ -49,21 +49,21 @@ function Card({ m, size, vouches }: { m: Member; size: Size; vouches: number }) 
   if (size === 'xl')
     return (
       <li className="card group reveal-scale">
-        <div className="relative isolate flex min-h-[440px] items-end sm:min-h-[520px]">
+        <div className="relative isolate flex min-h-[400px] items-end sm:min-h-[520px]">
           <div className="absolute inset-0 -z-10">
             <Banner m={m} />
             <div className="absolute inset-0 bg-linear-to-t from-night via-night/70 to-night/10" />
           </div>
-          <div className="flex w-full flex-col gap-6 p-7 sm:flex-row sm:items-end sm:p-12">
+          <div className="flex w-full min-w-0 flex-col gap-5 p-6 sm:flex-row sm:items-end sm:gap-6 sm:p-12">
             <span className="w-fit rounded-full bg-red p-1 shadow-[0_0_80px_-12px_var(--color-red)]">
-              <Avatar p={m} px={256} className="size-32 ring-4 ring-night sm:size-40" />
+              <Avatar p={m} px={256} className="size-24 ring-4 ring-night sm:size-40" />
             </span>
             <div className="min-w-0">
               <span className="glass inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-medium">
                 <Crown /> {m.tier}
               </span>
-              <p className="display mt-4 truncate pb-1 text-5xl sm:text-7xl">{m.name}</p>
-              <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-haze">
+              <p className="display mt-4 pb-1 text-[2.6rem] [overflow-wrap:anywhere] sm:truncate sm:text-7xl">{m.name}</p>
+              <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-haze sm:text-base">
                 <span>@{m.username}</span>
                 <Facts m={m} vouches={vouches} />
               </p>
@@ -75,8 +75,8 @@ function Card({ m, size, vouches }: { m: Member; size: Size; vouches: number }) 
 
   if (size === 'sm')
     return (
-      <li className="card reveal flex items-center gap-4 p-4">
-        <Avatar p={m} className="size-14" />
+      <li className="card reveal flex items-center gap-3 p-3 sm:gap-4 sm:p-4">
+        <Avatar p={m} className="size-12 sm:size-14" />
         <span className="min-w-0 flex-1">
           <span className="block truncate font-semibold">{m.name}</span>
           <span className="block truncate text-sm text-haze">@{m.username}</span>
@@ -88,18 +88,18 @@ function Card({ m, size, vouches }: { m: Member; size: Size; vouches: number }) 
   const lg = size === 'lg'
   return (
     <li className="card group reveal-scale">
-      <div className={`relative overflow-hidden ${lg ? 'aspect-[16/9]' : 'aspect-[2/1]'}`}>
+      <div className={`relative overflow-hidden ${lg ? 'aspect-[5/3] sm:aspect-[16/9]' : 'aspect-[2/1]'}`}>
         <Banner m={m} />
         <div className="absolute inset-0 bg-linear-to-t from-night/80 to-transparent" />
-        <span className="glass absolute top-3 right-3 rounded-full px-3 py-1 text-xs font-medium">{m.tier}</span>
+        <span className="glass absolute top-2 right-2 rounded-full px-2.5 py-0.5 text-[11px] font-medium sm:top-3 sm:right-3 sm:px-3 sm:py-1 sm:text-xs">{m.tier}</span>
       </div>
-      <div className={`relative ${lg ? 'px-7 pb-7' : 'px-5 pb-5'}`}>
-        <span className={`inline-block rounded-full p-[3px] ${lg ? '-mt-14 bg-white/20' : '-mt-10 bg-white/10'}`}>
-          <Avatar p={m} px={256} className={`ring-4 ring-night ${lg ? 'size-28' : 'size-20'}`} />
+      <div className={`relative px-3.5 pb-4 ${lg ? 'sm:px-7 sm:pb-7' : 'sm:px-5 sm:pb-5'}`}>
+        <span className={`inline-block rounded-full p-[3px] ${lg ? '-mt-10 bg-white/20 sm:-mt-14' : '-mt-8 bg-white/10 sm:-mt-10'}`}>
+          <Avatar p={m} px={256} className={`ring-4 ring-night ${lg ? 'size-20 sm:size-28' : 'size-16 sm:size-20'}`} />
         </span>
-        <p className={`mt-4 truncate font-semibold tracking-tight ${lg ? 'text-2xl' : 'text-lg'}`}>{m.name}</p>
-        <p className="truncate text-haze">@{m.username}</p>
-        <p className="mt-5 flex flex-wrap gap-x-4 gap-y-1 border-t border-white/[.06] pt-4 text-sm text-haze">
+        <p className={`mt-3 truncate font-semibold tracking-tight sm:mt-4 ${lg ? 'text-lg sm:text-2xl' : 'sm:text-lg'}`}>{m.name}</p>
+        <p className="truncate text-sm text-haze sm:text-base">@{m.username}</p>
+        <p className="mt-3 flex flex-col gap-x-4 gap-y-0.5 border-t border-white/[.06] pt-3 text-xs text-haze sm:mt-5 sm:flex-row sm:flex-wrap sm:pt-4 sm:text-sm">
           <Facts m={m} vouches={vouches} />
         </p>
       </div>
@@ -121,24 +121,24 @@ export default async function Team() {
   const tiers = TIERS.map((tier, rank) => ({ tier, rank, members: team.filter((m) => m.rank === rank) })).filter((t) => t.members.length)
 
   return (
-    <main className="px-4 pt-36 sm:px-8 sm:pt-44">
+    <main className="px-3 pt-32 sm:px-8 sm:pt-44">
       <header className="hero-out mx-auto flex max-w-4xl flex-col items-center text-center">
         <Pill>
           Team · {team.length} people · {tiers.length} tiers
         </Pill>
-        <h1 className="display text-silver mt-6 pb-2 text-[3.6rem] sm:text-8xl lg:text-[7.5rem]">The people behind the nights.</h1>
-        <p className="mt-6 max-w-lg text-lg text-haze sm:text-xl">They host the events, pay out the rewards and keep ROOH what it is. DM any of them on Discord.</p>
+        <h1 className="display text-silver mt-6 pb-2 text-[clamp(2.9rem,14vw,3.6rem)] sm:text-8xl lg:text-[7.5rem]">The people behind the nights.</h1>
+        <p className="mt-5 max-w-lg px-2 text-[17px] text-pretty text-haze sm:mt-6 sm:text-xl">They host the events, pay out the rewards and keep ROOH what it is. DM any of them on Discord.</p>
       </header>
 
-      <div className="mx-auto mt-24 max-w-7xl space-y-24 sm:space-y-32">
+      <div className="mx-auto mt-16 max-w-7xl space-y-16 sm:mt-24 sm:space-y-32">
         {tiers.map(({ tier, rank, members }) => {
           const size = SIZE[rank]
           return (
             <section key={tier}>
-              <div className="reveal mb-8 flex items-end gap-5 border-b border-white/[.07] pb-5">
+              <div className="reveal mb-5 flex items-baseline gap-3 border-b border-white/[.07] px-1 pb-4 sm:mb-8 sm:gap-5 sm:pb-5">
                 <span className="font-mono text-sm text-red">{String(rank + 1).padStart(2, '0')}</span>
-                <h2 className={`display text-silver pb-1 ${size === 'xl' ? 'text-5xl sm:text-7xl' : size === 'sm' ? 'text-3xl sm:text-4xl' : 'text-4xl sm:text-5xl'}`}>{tier}</h2>
-                <span className="ml-auto pb-1.5 text-sm text-haze">
+                <h2 className={`display text-silver pb-1 ${size === 'xl' ? 'text-[2.6rem] sm:text-7xl' : size === 'sm' ? 'text-3xl sm:text-4xl' : 'text-[2.1rem] sm:text-5xl'}`}>{tier}</h2>
+                <span className="ml-auto shrink-0 text-sm text-haze">
                   {members.length} {members.length === 1 ? 'person' : 'people'}
                 </span>
               </div>

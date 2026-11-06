@@ -10,6 +10,8 @@ import './globals.css'
 const DESCRIPTION =
   'Rooh - A highly active Discord community with nonstop chats, voice hangouts & a lively space for Hindi and English speakers. Discover one of the best Indian Discord servers for socializing, Indian chat servers, Indian online communities, and active hangout Discord servers.'
 
+export const viewport = { themeColor: '#07020d', colorScheme: 'dark', viewportFit: 'cover' }
+
 export async function generateMetadata() {
   const g = await getGuild()
   return {
