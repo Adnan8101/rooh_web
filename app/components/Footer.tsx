@@ -32,7 +32,7 @@ export default function Footer({ icon }: { icon?: string | null }) {
         </div>
         <nav aria-label="Explore" className="flex flex-col gap-1 text-sm sm:gap-3">
           <p className={heading}>Explore</p>
-          {[{ href: '/', label: 'Home' }, ...links].map((l) => (
+          {[{ href: '/', label: 'Home' }, ...links, { href: '/team/apply', label: 'Become a Team Member' }].map((l) => (
             <Link key={l.href} href={l.href} className={item}>
               {l.label}
             </Link>

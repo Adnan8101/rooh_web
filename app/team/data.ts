@@ -1,7 +1,7 @@
 import { db } from '../lib/db'
 
 // Website tiers, highest first. Must match TIERS in bot/src/index.ts.
-export const TIERS = ['Owner', 'Imposter', 'Malkin', 'Co Owner', 'Manager', 'Head Mod', 'Staff Team'] as const
+export const TIERS = ['Owner', 'Imposter', 'Malkin', 'Co Owner', 'Developer', 'Manager', 'Head Mod', 'Staff Team'] as const
 export type Tier = (typeof TIERS)[number]
 
 export type Member = {
@@ -15,6 +15,14 @@ export type Member = {
   joinedAt: Date | null
 }
 
+const fallbackAvatar = (id: string) => {
+  try {
+    return `https://cdn.discordapp.com/embed/avatars/${Number((BigInt(id) >> BigInt(22)) % BigInt(6))}.png`
+  } catch {
+    return 'https://cdn.discordapp.com/embed/avatars/0.png'
+  }
+}
+
 /**
  * Everyone on the team, placed once in the highest tier they qualify for:
  * their own tier (bot !adduser) or the tier of any linked Discord role they hold (bot !addrole).
@@ -22,8 +30,14 @@ export type Member = {
 export async function getTeam(): Promise<Member[]> {
   const d = await db()
   const [docs, links] = await Promise.all([
-    d.collection<any>('users').find({ bot: { $ne: true } }).toArray(),
-    d.collection<any>('roles').find().toArray(),
+    d
+      .collection<any>('users')
+      .find(
+        { bot: { $ne: true } },
+        { projection: { username: 1, globalName: 1, displayName: 1, avatar: 1, banner: 1, manualTier: 1, roles: 1, joinedAt: 1 } },
+      )
+      .toArray(),
+    d.collection<any>('roles').find({}, { projection: { tier: 1 } }).toArray(),
   ])
   const roleTier = new Map<string, string>(links.map((r) => [r._id, r.tier]))
 
@@ -36,14 +50,14 @@ export async function getTeam(): Promise<Member[]> {
       const rank = Math.min(...ranks)
       return [
         {
-          id: u._id,
+          id: String(u._id),
           name: (u.displayName ?? u.globalName ?? u.username).trim(),
           username: u.username,
-          avatar: u.avatar,
+          avatar: u.avatar || fallbackAvatar(String(u._id)),
           banner: u.banner ?? null,
           tier: TIERS[rank],
           rank,
-          joinedAt: u.joinedAt ?? null,
+          joinedAt: u.joinedAt ? new Date(u.joinedAt) : null,
         },
       ]
     })

@@ -53,7 +53,7 @@ export default async function Home() {
   const best = events.reduce((a, b) => (pool(b) > pool(a) ? b : a))
   const bars = best.rewards?.flatMap((g) => g.items.flatMap((i) => Array.from({ length: i.count ?? 1 }, () => i.amount))) ?? []
   const latest = vouches[0]
-  const rows = [vouches.slice(0, 16), vouches.slice(16, 32)]
+  const rows = [vouches.slice(0, 16), vouches.slice(16, 32)].filter((r) => r.length > 0)
 
   return (
     <main>
