@@ -1,4 +1,7 @@
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Inter } from 'next/font/google'
 
-export const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
-export const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
+/**
+ * Apple's own type. SF Pro can't be licensed for the web, so Apple devices use the real thing
+ * from the system (see --font-sans in globals.css) and everyone else gets Inter, its closest open match.
+ */
+export const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })

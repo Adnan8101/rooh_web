@@ -3,7 +3,7 @@ import Footer from './components/Footer'
 import Nav from './components/Nav'
 import SmoothScroll from './components/SmoothScroll'
 import Spotlight from './components/Spotlight'
-import { geist, geistMono } from './fonts'
+import { inter } from './fonts'
 import { getGuild } from './lib/guild'
 import './globals.css'
 
@@ -26,7 +26,7 @@ export async function generateMetadata() {
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const g = await getGuild()
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
+    <html lang="en" className={inter.variable}>
       <body>
         <SmoothScroll />
         <div aria-hidden className="progress fixed inset-x-0 top-0 z-[60] h-0.5 origin-left bg-red" />
