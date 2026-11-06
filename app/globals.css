@@ -1,0 +1,334 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+/* Two colours, violet and red. Everything else is night tinted with violet. */
+@theme {
+  --color-night: #07020d;
+  --color-deep: #0e0617;
+  --color-mist: #f6f1ff;
+  --color-haze: #a497bb;
+  --color-violet: #8b3dff;
+  --color-iris: #c3a3ff;
+  --color-red: #ff2e51;
+  --color-rose: #ff8aa0;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-turn: turn 40s linear infinite;
+  --animate-marquee: marquee 70s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-flicker: flicker 1.4s ease-in-out infinite alternate;
+  --animate-beacon: beacon 2s ease-out infinite;
+  --animate-enter: enter 0.9s var(--ease-out) backwards;
+
+  @keyframes turn {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes float {
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  @keyframes flicker {
+    50% {
+      transform: scale(0.92, 1.08);
+      opacity: 0.85;
+    }
+    100% {
+      transform: scale(1.04, 0.95);
+    }
+  }
+  @keyframes beacon {
+    from {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    to {
+      transform: scale(3.2);
+      opacity: 0;
+    }
+  }
+  /* transform + opacity only: both run on the GPU compositor, never on the main thread */
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 28px, 0);
+    }
+  }
+}
+
+/* Big type: tight, heavy, balanced. */
+@utility display {
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+  text-wrap: balance;
+}
+
+/* Headline metal: white fading to violet-grey. */
+@utility text-silver {
+  background: linear-gradient(180deg, #fff 35%, rgb(196 178 230 / 0.7));
+  background-clip: text;
+  color: transparent;
+}
+
+/* The one accent: flat red, used sparingly. Violet is only ever light, never paint. */
+@utility text-brand {
+  color: var(--color-red);
+}
+
+/*
+ * iOS-style liquid glass: blur + saturation boost lifts the colour of whatever is behind,
+ * a bright top lip and a softer bottom lip read as a curved edge catching light,
+ * and light pools along the bottom inside. Only used on small floating pieces so it stays cheap.
+ */
+@utility glass {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.13), rgb(255 255 255 / 0.02) 45%, rgb(255 255 255 / 0.06)),
+    rgb(30 14 46 / 0.4);
+  backdrop-filter: blur(16px) saturate(190%) brightness(1.08);
+  -webkit-backdrop-filter: blur(16px) saturate(190%) brightness(1.08);
+  box-shadow:
+    inset 0 1px 0.5px rgb(255 255 255 / 0.45),
+    inset 0 -1px 0.5px rgb(255 255 255 / 0.12),
+    inset 0 0 0 1px rgb(255 255 255 / 0.1),
+    inset 0 -12px 20px -14px rgb(255 255 255 / 0.22),
+    0 10px 30px -10px rgb(0 0 0 / 0.6);
+}
+
+/* Surface for every card. The border catches the light where the pointer is (see Spotlight.tsx). */
+@utility card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.015));
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.07),
+    inset 0 1px 0 rgb(255 255 255 / 0.07);
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  &::before {
+    z-index: 3;
+    padding: 1px;
+    background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0), rgb(255 255 255 / 0.35), transparent 75%);
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+  }
+  &::after {
+    z-index: -1;
+    background: radial-gradient(520px circle at var(--mx, 50%) var(--my, 0), rgb(139 61 255 / 0.14), transparent 60%);
+  }
+  &:hover::before,
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+/* Conic light used by the eclipse ring and stage glows. */
+@utility bg-ring {
+  background: conic-gradient(
+    var(--color-violet),
+    var(--color-red) 20%,
+    transparent 38% 58%,
+    var(--color-violet) 82%,
+    var(--color-violet)
+  );
+}
+
+@utility fade-x {
+  mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/*
+ * Scroll-driven motion. Every effect is tied to scroll position (not time), so it moves exactly
+ * with the finger/wheel, and only animates transform + opacity, which the GPU handles off the main thread.
+ * Browsers without scroll timelines simply show everything in place.
+ */
+@keyframes grow {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 48px, 0) scale(0.94);
+  }
+}
+@keyframes drift {
+  from {
+    transform: translate3d(0, 9%, 0);
+  }
+  to {
+    transform: translate3d(0, -9%, 0);
+  }
+}
+@keyframes hero-out {
+  to {
+    opacity: 0;
+    transform: translate3d(0, -10vh, 0) scale(0.94);
+  }
+}
+@keyframes hero-zoom {
+  to {
+    opacity: 0.35;
+    transform: scale(1.22) rotate(8deg);
+  }
+}
+@keyframes lit {
+  from {
+    opacity: 0.16;
+  }
+}
+@keyframes rise {
+  from {
+    transform: translate3d(0, 30%, 0);
+  }
+}
+@keyframes slide-l {
+  from {
+    transform: translate3d(140px, 0, 0);
+  }
+  to {
+    transform: translate3d(-140px, 0, 0);
+  }
+}
+@keyframes slide-r {
+  from {
+    transform: translate3d(-140px, 0, 0);
+  }
+  to {
+    transform: translate3d(140px, 0, 0);
+  }
+}
+@keyframes progress {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.progress {
+  display: none;
+}
+
+@supports (animation-timeline: view()) {
+  .reveal,
+  .reveal-scale,
+  .parallax,
+  .word,
+  .rise,
+  .slide-l,
+  .slide-r {
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+  }
+  .reveal {
+    animation-name: enter;
+    animation-range: entry 0% entry 55%;
+  }
+  /* big cards: rise and settle to full size */
+  .reveal-scale {
+    animation-name: grow;
+    animation-range: entry 0% cover 30%;
+  }
+  /* art floats slower than the page around it */
+  .parallax {
+    animation-name: drift;
+    animation-range: cover;
+  }
+  /* statement text lights up word by word as it crosses the screen */
+  .word {
+    animation-name: lit;
+    animation-range: cover 18% cover 42%;
+  }
+  .rise {
+    animation-name: rise;
+    animation-range: entry 0% entry 100%;
+  }
+  .slide-l {
+    animation-name: slide-l;
+    animation-range: cover;
+  }
+  .slide-r {
+    animation-name: slide-r;
+    animation-range: cover;
+  }
+  /* page heroes drift up and dissolve as you leave them */
+  .hero-out,
+  .hero-zoom,
+  .progress {
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: scroll(root);
+  }
+  .hero-out {
+    animation-name: hero-out;
+    animation-range: 0 85vh;
+  }
+  .hero-zoom {
+    animation-name: hero-zoom;
+    animation-range: 0 100vh;
+  }
+  .progress {
+    display: block;
+    animation-name: progress;
+  }
+}
+
+/* Lenis drives the scroll; the browser must not smooth it a second time. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis-stopped {
+  overflow: clip;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply flex min-h-dvh flex-col bg-night font-sans text-mist antialiased selection:bg-red selection:text-white;
+  }
+  :focus-visible {
+    @apply rounded-md outline-2 outline-offset-4 outline-red;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
